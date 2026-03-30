@@ -10,9 +10,24 @@ Usage:
 """
 
 import os
+import subprocess
 import argparse
 import numpy as np
 import tensorflow as tf
+
+# Pull latest changes before running
+_repo_dir = os.path.dirname(os.path.abspath(__file__))
+print("Pulling latest changes from git...")
+try:
+    result = subprocess.run(
+        ["git", "pull"], cwd=_repo_dir, capture_output=True, text=True, timeout=30
+    )
+    print(result.stdout.strip() if result.stdout.strip() else "Already up to date.")
+    if result.stderr and "error" in result.stderr.lower():
+        print(f"Git warning: {result.stderr.strip()}")
+except Exception as e:
+    print(f"Git pull skipped: {e}")
+print()
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.applications import EfficientNetB3
 from tensorflow.keras.layers import (

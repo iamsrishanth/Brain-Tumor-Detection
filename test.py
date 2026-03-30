@@ -11,11 +11,26 @@ Usage:
 """
 
 import os
+import subprocess
 import json
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+# Pull latest changes before running
+_repo_dir = os.path.dirname(os.path.abspath(__file__))
+print("Pulling latest changes from git...")
+try:
+    result = subprocess.run(
+        ["git", "pull"], cwd=_repo_dir, capture_output=True, text=True, timeout=30
+    )
+    print(result.stdout.strip() if result.stdout.strip() else "Already up to date.")
+    if result.stderr and "error" in result.stderr.lower():
+        print(f"Git warning: {result.stderr.strip()}")
+except Exception as e:
+    print(f"Git pull skipped: {e}")
+print()
 from sklearn.metrics import (
     classification_report,
     confusion_matrix,
